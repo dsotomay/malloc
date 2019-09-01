@@ -42,7 +42,7 @@ struct block_meta *find_free_block(struct block_meta **last, size_t size) {
 struct block_meta *request_space(struct block_meta* last, size_t size) {
 	// static int i = 1;
 	// static int total = 0;
-	puts("got here first");
+	// puts("got here first");
   struct block_meta *block;
 	// if (last)
 	// {
@@ -65,7 +65,7 @@ struct block_meta *request_space(struct block_meta* last, size_t size) {
   }
 
   if (last) { // NULL on first request.
-	puts("got here next");
+	// puts("got here next");
     last->next = block;
   }
   block->size = size;
@@ -93,14 +93,14 @@ void *malloc(size_t size) {
     struct block_meta *last = global_base;
     block = find_free_block(&last, size);
     if (!block) { // Failed to find free block.
-	puts("oh no not here");
+	// puts("oh no not here");
       block = request_space(last, size);
       if (!block) {
         return NULL;
       }
     } else {      // Found free block
       // TODO: consider splitting block here.
-		puts("got here after");
+		// puts("got here after");
       block->free = 0;
       block->magic = 0x77777777;
     }

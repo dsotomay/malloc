@@ -13,17 +13,17 @@
 #include "malloc.h"
 #include <stdlib.h>
 #include <stdio.h>
-#define TINY_SIZE 64*1024*4096
+#define MAX_HEAP 64*1024*4096
 
+	char *heap;
+char *brkp = NULL;
 char *endp = NULL;
-// static void init() __attribute__ ((constructor));
+static void init() __attribute__ ((constructor));
 
 void init()
 {
-	char *heap;
-char *brkp = NULL;
 	
-	g_bin = &
+	// g_bin = &
 	heap = (char*)mmap(NULL, MAX_HEAP, (PROT_READ | PROT_WRITE),
 	(MAP_PRIVATE | MAP_ANONYMOUS), -1, 0);
 	brkp = heap;
@@ -32,10 +32,10 @@ char *brkp = NULL;
 
 void *ft_sbrk(size_t size)
 {
-	t_zone	*zone;
+	// t_zone	*zone;
 
-	zone = (t_zone*)g_bin;
-	zone->
+	// zone = (t_zone*)g_bin;
+	// zone->
 	// puts("got here");
 	if (size == 0)
 		return (void *)brkp;
@@ -43,6 +43,6 @@ void *ft_sbrk(size_t size)
 	brkp += size;
 	if (brkp >= endp)
 		return NULL;
-	printf("%p\n", free);
+	// printf("%p\n", free);
 	return free;
 }
