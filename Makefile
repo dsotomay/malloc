@@ -20,8 +20,9 @@ $(NAME): $(SRC) $(LIBFT)
 	$(CONFIG)
 	ln -s $(NAME) $(NAMELN)
 
-$(TEST):
-	gcc -g malloc.c sbrk.c test.c
+test:
+	make -C libft/
+	gcc -g malloc.c init.c block.c libft/libft.a
 
 clean:
 	/bin/rm -f $(OBJ)

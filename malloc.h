@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:46:12 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/12 18:58:14 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/12 23:14:45 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct	s_zone
 {
 	struct s_zone	*next;
 	t_block			*root;
+	t_block			*end;
 	size_t			size;
 	size_t			used;
 }				t_zone;
@@ -52,8 +53,8 @@ typedef struct	s_bin
 /*
 ** Global bin struct declared
 */
-extern t_bin	g_bin __attribute__ ((visibility ("hidden")));// may need to remove this attribute part 
-void	g_bin_init(void);
+t_bin	g_bin __attribute__ ((visibility ("hidden")));// may need to remove this attribute part 
+void	g_bin_init(void) __attribute__ ((constructor));
 
 
 void 	*ft_sbrk(size_t size);
@@ -73,6 +74,7 @@ t_zone	*zone_init(size_t size);
 */
 
 // TODO: need tree traversal as well as 
-t_block	*blk_init(t_block *blk, size_t size);
+t_block	*blk_init(void *blk, size_t size);
+void	blk_push(t_zone *lst, size_t size);
 
 #endif

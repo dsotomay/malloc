@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/11 19:41:45 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/12 19:01:09 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/12 23:40:26 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,23 @@
 
 void	blk_push(t_zone *lst, size_t size)
 {
+	void	*curr;
+	
 	if (!lst->root)
-		blk_init(lst->root, size);
+	{
+		curr = (void*)lst;
+		curr += sizeof(t_zone);
+		lst->root = blk_init(curr, size + BLK_SIZE);
+		lst->end = lst->root;
+	}
 	else
-		
+	{
+		curr = (void*)lst->end;
+		curr += (lst->end->blk_size);
+		lst->end->next = blk_init(curr, size + BLK_SIZE);
+		lst->end = lst->end->next;
+		printf("%p\n", lst->end);
+	}
 }
 
 // void	blk_join(t_block *blk1, t_block blk2) may or may not get used
