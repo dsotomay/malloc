@@ -20,6 +20,9 @@ $(NAME): $(SRC) $(LIBFT)
 	$(CONFIG)
 	ln -s $(NAME) $(NAMELN)
 
+$(TEST):
+	gcc -g malloc.c sbrk.c test.c
+
 clean:
 	/bin/rm -f $(OBJ)
 	make clean -C ft_printf/

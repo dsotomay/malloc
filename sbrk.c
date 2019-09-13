@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/22 17:07:34 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/08/22 20:52:25 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/07 21:15:23 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #define MAX_HEAP 64*1024*4096
 
-	char *heap;
+char *heap;
 char *brkp = NULL;
 char *endp = NULL;
 static void init() __attribute__ ((constructor));
