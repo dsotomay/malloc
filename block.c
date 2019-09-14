@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/11 19:41:45 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/12 23:40:26 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/13 15:50:04 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	blk_push(t_zone *lst, size_t size)
 		curr += (lst->end->blk_size);
 		lst->end->next = blk_init(curr, size + BLK_SIZE);
 		lst->end = lst->end->next;
-		printf("%p\n", lst->end);
 	}
 }
 

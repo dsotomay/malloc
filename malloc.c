@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:37:46 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/12 23:45:46 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/13 23:16:05 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,20 +132,23 @@
 
 int main()
 {
+	char *str1[1000];
 	// struct block_meta *new;
-	char *str1 = malloc(sizeof(char) * 24);
+	for (int i = 0; i < 1000; i++)
+		str1[i] = malloc(sizeof(char) * 1000);
+	char *str2 = malloc(sizeof(char) * 13);
 	// char *str2 = malloc(sizeof(char) * 24);
 	// str = (char*)mmap(0, psize, PROT_READ | PROT_WRITE,
 	// MAP_ANON | MAP_PRIVATE, -1, 0);
 	// _MMAP()
-	// strcat(str2, "hello world!");
-	strcat(str1, "hello world!this is going to overwriteksjhdfkgjhs");
-	printf("%s, %p\n", str1, str1);
+	strcat(str2, "hello world!");
+	printf("%s, %p\n", str2, str2);
+	strcat(str1[99], "hello world!this is going to overwriteksjhdfkgjhs");
+	printf("%s, %p\n", str1[99], str1[99]);
 	// void *new1 = (void*)str2;
 	// new = (struct block_meta*)new1 - 1;
 	// printf("%c\n", (char)new->next);
 	// printf("%c\n", (char)new->next);
-	// printf("%s, %p\n", str2, str2);
 	// printf("%s\n", (char*)new);
 	// free(str2);
 	// printf("%s\n", (char*)new);
@@ -169,23 +172,69 @@ int main()
 	
 // }
 
-// static t_block *find_free(t_zone *zone, size_t size)
-// {
-// 	while (zone->next)
-// 	{
-// 		while (zone->root)
-// 			if (zone->root->is_free == 1 && zone->root->blk_size >= size)
-// 				return (__split_block(zone->root, size) + 1);
-// 			else if (zone->root->is_free == 1)
-// 	}
-// }
+
+
+void	de_alloc()
+{
+	t_zone	*tmp;
+	while (g_bin.large_lst)
+	{
+		tmp = g_bin.large_lst;
+		g_bin.large_lst = g_bin.large_lst->next;
+		munmap(tmp, tmp->size);
+	}
+	while (g_bin.small_lst)
+	{
+		tmp = g_bin.small_lst;
+		g_bin.small_lst = g_bin.small_lst->next;
+		munmap(tmp, tmp->size);
+	}
+	while (g_bin.tiny_lst)
+	{
+		tmp = g_bin.tiny_lst;
+		g_bin.tiny_lst = g_bin.tiny_lst->next;
+		munmap(tmp, tmp->size);
+	}
+	printf("destructor called\n");
+}
+
+static t_block *find_free(t_zone *zone, size_t size)
+{
+	static int i = 0;
+	while (zone)
+	{
+		while (zone->root)
+		{
+			if (zone->root->is_free == 1 && zone->root->blk_size >= size && (zone->used += zone->root->blk_size))
+				return (zone->root);//(__split_block(zone->root, size) + 1);
+			// else if (zone->root->is_free == 1)
+			zone->root = zone->root->next;
+		}
+		if (!zone->root && zone->size - zone->used > size + BLK_SIZE)
+		{
+			blk_push(zone, size);
+			zone->used += zone->end->blk_size;
+			return (zone->end);
+		}
+		if (!zone->next)
+			zone->next = zone_init(g_bin.pgsize * 25);
+		zone = zone->next;
+	}
+	return (NULL);
+}
 
 void	*malloc(size_t size)
 {
+	t_block	*blk;
+	
 	if (size <= 0)
 		return (NULL);
-	printf("%p\n", g_bin.tiny_lst->root);
-	printf("%p\n", g_bin.tiny_lst->root + 1);
-	return (g_bin.tiny_lst->root + 1);
+	if (size > SMALL)
+		blk = find_free(g_bin.large_lst, size);
+	else
+		blk = find_free(size > TINY ? g_bin.small_lst : g_bin.tiny_lst, size);
+	blk->is_free = 0;
+	
+	return (blk + 1);
 	// check free table
 }

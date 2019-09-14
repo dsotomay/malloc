@@ -6,11 +6,10 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/21 18:47:22 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/08 19:41:01 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/13 15:44:59 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-t_zone	*zone_init(size_t size)
-{}
+

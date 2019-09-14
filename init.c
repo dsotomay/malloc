@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:56:29 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/12 23:42:53 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/13 23:15:18 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ void	g_bin_init()
 	}
 	g_bin.total = g_bin.small_lst->size + g_bin.tiny_lst->size;
 	g_bin.used = g_bin.small_lst->used + g_bin.tiny_lst->used;
-	printf("fourth | %i\n", i);
 }
 
 t_zone	*zone_init(size_t size)

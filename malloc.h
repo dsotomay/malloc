@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:46:12 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/12 23:14:45 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/13 22:47:03 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 typedef struct	s_block
 {
 	size_t			blk_size;
-	struct	s_block	*next;
+	struct s_block	*next;
 	int				is_free;
 }				t_block;
 
@@ -53,28 +53,28 @@ typedef struct	s_bin
 /*
 ** Global bin struct declared
 */
-t_bin	g_bin __attribute__ ((visibility ("hidden")));// may need to remove this attribute part 
-void	g_bin_init(void) __attribute__ ((constructor));
+t_bin			g_bin __attribute__((visibility("hidden")));// may need to remove this attribute part 
+void			g_bin_init(void) __attribute__((constructor));
+void			de_alloc() __attribute__((destructor));
 
 
-void 	*ft_sbrk(size_t size);
-void	free(void *ptr);
-void	*malloc(size_t size);
-void	*realloc(void *ptr, size_t size);
+void			free(void *ptr);
+void			*malloc(size_t size);
+void			*realloc(void *ptr, size_t size);
 
 /*
 ** ZONE
 */
 
 // TODO: need list traversal
-t_zone	*zone_init(size_t size);
+t_zone			*zone_init(size_t size);
 
 /*
 ** BLOCK
 */
 
 // TODO: need tree traversal as well as 
-t_block	*blk_init(void *blk, size_t size);
-void	blk_push(t_zone *lst, size_t size);
+t_block			*blk_init(void *blk, size_t size);
+void			blk_push(t_zone *lst, size_t size);
 
 #endif
