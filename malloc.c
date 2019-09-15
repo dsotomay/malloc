@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:37:46 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/13 23:16:05 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/14 21:40:05 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,20 +160,6 @@ int main()
 
 // end of test code to remove
 
-// static t_block *__split_block(t_block *block, size_t size)
-// {
-// 	t_block	*new;
-// 	if (block->blk_size - size > (sizeof(t_block)))
-// 	{
-// 		new = blk_init(block->blk_size - size - (sizeof(t_block)));
-// 		new->next = block->next;
-// 		block->next = new;
-// 	}
-	
-// }
-
-
-
 void	de_alloc()
 {
 	t_zone	*tmp;
@@ -198,14 +184,26 @@ void	de_alloc()
 	printf("destructor called\n");
 }
 
+// static t_block *__split_block(t_block *block, size_t size)
+// {
+// 	t_block	*new;
+// 	if (block->blk_size - size > (sizeof(t_block)))
+// 	{
+// 		new = blk_init(block->blk_size - size - (sizeof(t_block)));
+// 		new->next = block->next;
+// 		block->next = new;
+// 	}
+	
+// }
+
 static t_block *find_free(t_zone *zone, size_t size)
 {
-	static int i = 0;
 	while (zone)
 	{
 		while (zone->root)
 		{
-			if (zone->root->is_free == 1 && zone->root->blk_size >= size && (zone->used += zone->root->blk_size))
+			if (zone->root->is_free == 1 && zone->root->blk_size >= size
+										&& (zone->used += zone->root->blk_size))
 				return (zone->root);//(__split_block(zone->root, size) + 1);
 			// else if (zone->root->is_free == 1)
 			zone->root = zone->root->next;
@@ -223,7 +221,7 @@ static t_block *find_free(t_zone *zone, size_t size)
 	return (NULL);
 }
 
-void	*malloc(size_t size)
+void			*malloc(size_t size)
 {
 	t_block	*blk;
 	
@@ -231,10 +229,21 @@ void	*malloc(size_t size)
 		return (NULL);
 	if (size > SMALL)
 		blk = find_free(g_bin.large_lst, size);
+	else if (size > TINY)
+		blk = find_free(g_bin.small_lst, size);
 	else
-		blk = find_free(size > TINY ? g_bin.small_lst : g_bin.tiny_lst, size);
+		blk = find_free(g_bin.tiny_lst, size);
 	blk->is_free = 0;
 	
 	return (blk + 1);
-	// check free table
+}
+
+void			free(void *ptr)
+{
+	t_block *blk;
+
+	if (!ptr)
+		return ;
+	blk = ((t_block*)ptr) - 1;
+	blk->is_free = 1;
 }
