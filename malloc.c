@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:37:46 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/14 21:40:05 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/19 23:33:11 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,43 +19,6 @@
 #include <stdio.h>
 
 // test code to be removed
-
-// struct block_meta {
-// 	size_t size;
-// 	struct block_meta *next;
-// 	int free;
-// 	int magic; // For debugging only. TODO: remove this in non-debug mode.
-// };
-
-// #define META_SIZE sizeof(struct block_meta)
-// void *global_base = NULL;
-
-// struct block_meta *find_free_block(struct block_meta **last, size_t size) {
-// 	struct block_meta *current = global_base;
-// 	while (current && !(current->free && current->size >= size)) {
-// 		*last = current;
-// 		current = current->next;
-// 	}
-// 	return current;
-// }
-
-// struct block_meta *request_space(struct block_meta* last, size_t size) {
-// 	struct block_meta *block;
-// 	block = ft_sbrk(0);
-// 	void *request = ft_sbrk(size + META_SIZE);
-// 	assert((void*)block == request); // Not thread safe.
-// 	if (block == (void*) -1) {
-// 		return NULL; // sbrk failed.
-// 	}
-// 	if (last) { // NULL on first request.
-// 		last->next = block;
-// 	}
-// 	block->size = size;
-// 	block->next = NULL;
-// 	block->free = 0;
-// 	block->magic = 0x12345678;
-// 	return block;
-// }
 
 // void *malloc(size_t size) {
 // 	struct block_meta *block;
@@ -86,48 +49,6 @@
 //   return(block+1);
 // }
 
-// void free(void *ptr) {
-//   if (!ptr) {
-//     return;
-//   }
-//   // TODO: consider merging blocks once splitting blocks is implemented.
-//   struct block_meta* block_ptr = (struct block_meta*)ptr-1;
-// //   assert(block_ptr->free == 0);
-//   block_ptr->free = 1;
-//   block_ptr->magic = 0x55555555;
-// }
-
-// void *realloc(void *ptr, size_t size) {
-//   if (!ptr) {
-//     // NULL ptr. realloc should act like malloc.
-//     return malloc(size);
-//   }
-
-//   struct block_meta* block_ptr = (struct block_meta*)ptr-1;
-//   if (block_ptr->size >= size) {
-//     // We have enough space. Could free some once we implement split.
-//     return ptr;
-//   }
-
-//   // Need to really realloc. Malloc new space and free old space.
-//   // Then copy old data to new space.
-//   void *new_ptr;
-//   new_ptr = malloc(size);
-//   if (!new_ptr) {
-//     return NULL; // TODO: set errno on failure.
-//   }
-//   memcpy(new_ptr, ptr, block_ptr->size);
-//   free(ptr);
-//   return new_ptr;
-// }
-
-// void *calloc(size_t nelem, size_t elsize) {
-//   size_t size = nelem * elsize; // TODO: check for overflow.
-//   void *ptr = malloc(size);
-//   memset(ptr, 0, size);
-//   return ptr;
-// }
-
 // start of test main
 
 int main()
@@ -145,6 +66,7 @@ int main()
 	printf("%s, %p\n", str2, str2);
 	strcat(str1[99], "hello world!this is going to overwriteksjhdfkgjhs");
 	printf("%s, %p\n", str1[99], str1[99]);
+	printf("%p\n", (((t_block*)str1[99])-1));
 	// void *new1 = (void*)str2;
 	// new = (struct block_meta*)new1 - 1;
 	// printf("%c\n", (char)new->next);
@@ -184,16 +106,16 @@ void	de_alloc()
 	printf("destructor called\n");
 }
 
-// static t_block *__split_block(t_block *block, size_t size)
+// static t_block *join_blk_check(t_block *block, size_t size)
 // {
 // 	t_block	*new;
+	
 // 	if (block->blk_size - size > (sizeof(t_block)))
 // 	{
 // 		new = blk_init(block->blk_size - size - (sizeof(t_block)));
 // 		new->next = block->next;
 // 		block->next = new;
 // 	}
-	
 // }
 
 static t_block *find_free(t_zone *zone, size_t size)
@@ -202,10 +124,10 @@ static t_block *find_free(t_zone *zone, size_t size)
 	{
 		while (zone->root)
 		{
+			// join_blk_check(zone->root, size)
 			if (zone->root->is_free == 1 && zone->root->blk_size >= size
 										&& (zone->used += zone->root->blk_size))
-				return (zone->root);//(__split_block(zone->root, size) + 1);
-			// else if (zone->root->is_free == 1)
+				return (split_blk(zone->root, size));
 			zone->root = zone->root->next;
 		}
 		if (!zone->root && zone->size - zone->used > size + BLK_SIZE)
@@ -236,6 +158,25 @@ void			*malloc(size_t size)
 	blk->is_free = 0;
 	
 	return (blk + 1);
+}
+
+void			*realloc(void *ptr, size_t size)
+{
+	void *new;
+	
+	if (!ptr)
+		return (malloc(size));
+	if (((t_block*)ptr - 1)->blk_size - BLK_SIZE >= size)
+		return (ptr);
+	if (size == 0 && ptr)
+	{
+		free(ptr);
+		return (malloc(TINY));
+	}
+	new = malloc(size);
+	ft_memcpy(new, ptr, ((t_block*)ptr - 1)->blk_size);
+	free(ptr);
+	return (new);
 }
 
 void			free(void *ptr)

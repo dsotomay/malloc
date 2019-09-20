@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/09/19 23:40:03 by dysotoma          #+#    #+#              #
+#    Updated: 2019/09/19 23:40:04 by dysotoma         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
@@ -22,7 +34,7 @@ $(NAME): $(SRC) $(LIBFT)
 
 test:
 	make -C libft/
-	gcc -g malloc.c init.c block.c libft/libft.a
+	gcc -g -Wall -Wextra -Werror malloc.c init.c block.c libft/libft.a
 
 clean:
 	/bin/rm -f $(OBJ)

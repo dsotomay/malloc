@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:56:29 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/13 23:15:18 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/19 15:58:13 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ void	g_bin_init()
 	while (i < MIN_ALLOC * 2)
 	{
 		if (i < MIN_ALLOC / 2)
-			blk_push(g_bin.small_lst, 1025);
+			blk_push(g_bin.small_lst, TINY + 1);
 		else if (i < MIN_ALLOC)
-			blk_push(g_bin.small_lst, 2048);
+			blk_push(g_bin.small_lst, SMALL / 2);
 		else if (i < (MIN_ALLOC * 2) - (MIN_ALLOC / 2))
-			blk_push(g_bin.tiny_lst, 512);
+			blk_push(g_bin.tiny_lst, TINY / 2);
 		else if (i < MIN_ALLOC * 2)
-			blk_push(g_bin.tiny_lst, 1024);
+			blk_push(g_bin.tiny_lst, TINY);
 		i++;
 	}
 	g_bin.total = g_bin.small_lst->size + g_bin.tiny_lst->size;
@@ -39,20 +39,20 @@ void	g_bin_init()
 
 t_zone	*zone_init(size_t size)
 {
-	t_zone	*zone;
+	char	*zone;
 
-	if ((zone = (t_zone*)mmap(NULL, size, (PROT_READ | PROT_WRITE),
+	if ((zone = (char*)mmap(NULL, size, (PROT_READ | PROT_WRITE),
 	(MAP_PRIVATE | MAP_ANONYMOUS), -1, 0)) == MAP_FAILED)
 	{
 		ft_errprintf("ERROR: no memory");
 		return (MAP_FAILED);
 	}
-	zone->next = NULL;
-	zone->root = NULL;
-	zone->end = NULL;
-	zone->size = size;
-	zone->used = sizeof(t_zone);
-	return (zone);
+	((t_zone*)zone)->next = NULL;
+	((t_zone*)zone)->root = NULL;
+	((t_zone*)zone)->end = NULL;
+	((t_zone*)zone)->size = size;
+	((t_zone*)zone)->used = sizeof(t_zone);
+	return ((t_zone*)zone);
 }
 
 t_block	*blk_init(void *blk, size_t size)

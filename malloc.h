@@ -6,16 +6,22 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:46:12 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/13 22:47:03 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/19 23:38:32 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MALLOC_H
 # define MALLOC_H
 # define BLK_SIZE (sizeof(t_block))
-# define MIN_ALLOC 100
-# define TINY 1024
-# define SMALL 4097
+# ifndef MIN_ALLOC
+#  define MIN_ALLOC 100
+# endif
+# ifndef TINY
+#  define TINY 1024
+# endif
+# ifndef SMALL
+#  define SMALL 4096
+# endif
 # include <sys/mman.h>
 # include "libft/libft.h"
 
@@ -53,7 +59,7 @@ typedef struct	s_bin
 /*
 ** Global bin struct declared
 */
-t_bin			g_bin __attribute__((visibility("hidden")));// may need to remove this attribute part 
+t_bin			g_bin __attribute__((visibility("hidden")));
 void			g_bin_init(void) __attribute__((constructor));
 void			de_alloc() __attribute__((destructor));
 
@@ -66,15 +72,15 @@ void			*realloc(void *ptr, size_t size);
 ** ZONE
 */
 
-// TODO: need list traversal
 t_zone			*zone_init(size_t size);
 
 /*
 ** BLOCK
 */
 
-// TODO: need tree traversal as well as 
 t_block			*blk_init(void *blk, size_t size);
 void			blk_push(t_zone *lst, size_t size);
+t_block			*split_blk(t_block *blk, size_t size);
+void			blk_join(t_block *blk1, t_block *blk2);
 
 #endif
