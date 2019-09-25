@@ -6,11 +6,11 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/11 19:41:45 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/19 23:31:43 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/23 17:54:07 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc.h"
+#include "ft_malloc.h"
 
 void	blk_push(t_zone *lst, size_t size)
 {
@@ -51,7 +51,8 @@ t_block	*split_blk(t_block *blk, size_t size)
 	blk1 += (blk->blk_size - (blk->blk_size - size));
 	blk->next = blk_init(blk1, blk->blk_size - size);
 	((t_block*)blk1)->next = tmp;
-	if (blk->next->blk_size - BLK_SIZE < 8 && blk->next->next->is_free == 1)
+	if (blk->next->blk_size - BLK_SIZE < 8 && blk->next->next
+	&& blk->next->next->is_free == 1)
 		blk_join(blk->next, blk->next->next);
 	return (blk);
 }

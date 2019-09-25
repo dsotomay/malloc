@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   malloc.h                                           :+:      :+:    :+:   */
+/*   ft_malloc.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:46:12 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/19 23:38:32 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/24 20:45:03 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MALLOC_H
-# define MALLOC_H
+#ifndef FT_MALLOC_H
+# define FT_MALLOC_H
 # define BLK_SIZE (sizeof(t_block))
 # ifndef MIN_ALLOC
 #  define MIN_ALLOC 100
@@ -24,6 +24,9 @@
 # endif
 # include <sys/mman.h>
 # include "libft/libft.h"
+// # define realloc(x, sz) ft_realloc(x, sz)
+// # define malloc(x) ft_malloc(x)
+// # define free(x) ft_free(x)
 
 typedef struct	s_block
 {
@@ -59,9 +62,11 @@ typedef struct	s_bin
 /*
 ** Global bin struct declared
 */
+
+
 t_bin			g_bin __attribute__((visibility("hidden")));
 void			g_bin_init(void) __attribute__((constructor));
-void			de_alloc() __attribute__((destructor));
+void			de_alloc();// __attribute__((destructor));
 
 
 void			free(void *ptr);
@@ -82,5 +87,11 @@ t_block			*blk_init(void *blk, size_t size);
 void			blk_push(t_zone *lst, size_t size);
 t_block			*split_blk(t_block *blk, size_t size);
 void			blk_join(t_block *blk1, t_block *blk2);
+
+/*
+** MEM_PRINT
+*/
+
+void 			show_alloc_mem();
 
 #endif

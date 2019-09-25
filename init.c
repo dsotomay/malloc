@@ -6,14 +6,15 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:56:29 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/19 15:58:13 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/24 21:12:30 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc.h"
+#include "ft_malloc.h"
 
 void	g_bin_init()
 {
+	
 	int i;
 	
 	g_bin.pgsize = getpagesize();
@@ -33,6 +34,7 @@ void	g_bin_init()
 			blk_push(g_bin.tiny_lst, TINY);
 		i++;
 	}
+	ft_printf("start = %p\n", g_bin.tiny_lst->root);
 	g_bin.total = g_bin.small_lst->size + g_bin.tiny_lst->size;
 	g_bin.used = g_bin.small_lst->used + g_bin.tiny_lst->used;
 }
@@ -44,7 +46,7 @@ t_zone	*zone_init(size_t size)
 	if ((zone = (char*)mmap(NULL, size, (PROT_READ | PROT_WRITE),
 	(MAP_PRIVATE | MAP_ANONYMOUS), -1, 0)) == MAP_FAILED)
 	{
-		ft_errprintf("ERROR: no memory");
+		ft_putendl_fd("ERROR: no memory", STDERR_FILENO);
 		return (MAP_FAILED);
 	}
 	((t_zone*)zone)->next = NULL;
