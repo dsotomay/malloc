@@ -6,33 +6,41 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/20 19:28:17 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/23 17:54:32 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/26 01:40:46 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
 
-static void	print_tiny(t_zone *zone)
+static void	print_tiny(t_zone *z)
 {
 	static int i = 0;
+	t_zone	*zone;
+	t_block	*blk;
+
+	zone = z;
 	ft_printf("\n\nTINY ZONE=======================\n");
-				// ft_printf("%i %p\n", zone->root->is_free, zone->root);
+				ft_printf("%i %p\n", zone->root->is_free, zone->root);
 	while (zone)
 	{
-		if (zone->root)
-		while (zone->root)
-		{
+		// if (zone->root)
 			i++;
-			if (!zone->root->is_free)
+		blk = zone->root;
+		while (blk && blk->next)
+		{
+			if (blk->is_free)
 			{
-				ft_printf("pointer at %p has %d allocated\n", zone->root,
-				zone->root->blk_size - BLK_SIZE);
+				if (blk->next)
+					i++;
+				ft_printf("pointer at %p has %d allocated\n", blk,
+				blk->blk_size - BLK_SIZE);
+				ft_printf("%i\n",i);
 			}
-			zone->root = zone->root->next;
+			blk = blk->next;
 		}
 		zone = zone->next;
-	}
 	ft_printf("%i\n",i);
+	}
 }
 
 static void	print_small(t_zone *zone)
@@ -54,7 +62,8 @@ static void	print_small(t_zone *zone)
 void show_alloc_mem()
 {
 	ft_printf("hello\n");
-		ft_printf("tiny_lstp = %p\n", g_bin.tiny_lst);
+		ft_printf("tiny_lstp = %p\n", g_bin.tiny_lst->root);
+		ft_printf("tiny_lstp = %p\n", g_bin.tiny_lst->end);
 	if (g_bin.tiny_lst)
 	{
 		ft_printf("tiny_lst->rootp = %p\n", g_bin.tiny_lst->root);

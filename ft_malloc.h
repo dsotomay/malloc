@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:46:12 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/24 20:45:03 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/25 22:39:48 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #  define SMALL 4096
 # endif
 # include <sys/mman.h>
+# include <sys/resource.h>
 # include "libft/libft.h"
 // # define realloc(x, sz) ft_realloc(x, sz)
 // # define malloc(x) ft_malloc(x)
@@ -54,6 +55,7 @@ typedef struct	s_bin
 	struct s_zone	*tiny_lst;
 	struct s_zone	*small_lst;
 	struct s_zone	*large_lst;
+	struct rlimit	rlp;
 	size_t			total;
 	size_t			used;
 	int				pgsize;
@@ -72,6 +74,7 @@ void			de_alloc();// __attribute__((destructor));
 void			free(void *ptr);
 void			*malloc(size_t size);
 void			*realloc(void *ptr, size_t size);
+void			*calloc(size_t count, size_t size);
 
 /*
 ** ZONE

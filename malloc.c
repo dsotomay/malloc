@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:37:46 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/24 23:34:40 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/26 01:26:17 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,9 @@
 // }
 
 // end of test code to remove
+
+
+
 /*
 ** void	de_alloc()
 ** {
@@ -121,22 +124,24 @@
 ** }
 */
 
-static t_block *find_free(t_zone *zone, size_t size)
+static t_block *find_free(t_zone *z, size_t size)
 {
-	// t_zone *zone;
+	t_zone	*zone;
+	t_block	*blk;
 
-	// zone = z;
+	zone = z;
 			// ft_printf("zone->rootp = %p\n", *zone);
 	while (zone)
 	{
-		while (zone->root)
+		blk = zone->root;
+		while (blk)
 		{
-			if (zone->root->is_free == 1 && zone->root->blk_size >= size
-										&& (zone->used += zone->root->blk_size))
-				return (split_blk(zone->root, size));
-			zone->root = zone->root->next;
+			if (blk->is_free == 1 && blk->blk_size >= size
+										&& (zone->used += blk->blk_size))
+				return (split_blk(blk, size + BLK_SIZE));
+			blk = blk->next;
 		}
-		if (!zone->root && zone->size - zone->used >= size + BLK_SIZE)
+		if (!blk && zone->size - zone->used >= size + BLK_SIZE)
 		{
 			blk_push(zone, size);
 			zone->used += zone->end->blk_size;
@@ -149,7 +154,7 @@ static t_block *find_free(t_zone *zone, size_t size)
 			else			
 				zone->next = zone_init(g_bin.pgsize * 25);
 		}
-		zone = zone->next;
+		zone = (int)zone->next != -1 ? zone->next : NULL;
 	}
 	return (NULL);
 }
@@ -164,7 +169,7 @@ void			*malloc(size_t size)
 	// ft_printf("here\n");
 	write(1, "here\n", 5);
 	blk = NULL;
-	if (size <= 0 || size == ~(0ULL) || size == ~(0ULL) - 1)
+	if (size <= 0 || size == ~(0ULL) || size >= g_bin.rlp.rlim_cur)
 		return (NULL);
 	if (size > SMALL)
 	{
@@ -183,7 +188,7 @@ void			*malloc(size_t size)
 
 void			*realloc(void *ptr, size_t size)
 {
-	void *new;
+	void	*new;
 	
 	if (!ptr)
 		return (malloc(size));
@@ -194,7 +199,11 @@ void			*realloc(void *ptr, size_t size)
 		free(ptr);
 		return (malloc(TINY));
 	}
-	new = malloc(size);
+	if ((new = malloc(size)) == NULL)
+	{
+		free(ptr);
+		return (new);
+	}
 	ft_memcpy(new, ptr, ((t_block*)ptr - 1)->blk_size);
 	free(ptr);
 	return (new);
@@ -208,4 +217,14 @@ void			free(void *ptr)
 		return ;
 	blk = ((t_block*)ptr) - 1;
 	blk->is_free = 1;
+}
+
+void			*calloc(size_t count, size_t size)
+{
+	void	*new;
+	
+	if (!(new = malloc(count * size)))
+		return (NULL);
+	ft_memset(new, 0, count * size);
+	return (new);
 }

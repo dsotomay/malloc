@@ -6,7 +6,7 @@
 #    By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/19 23:40:03 by dysotoma          #+#    #+#              #
-#    Updated: 2019/09/24 21:44:19 by dysotoma         ###   ########.fr        #
+#    Updated: 2019/09/26 00:02:08 by dysotoma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,9 +18,8 @@ NAME = libft_malloc_$(HOSTTYPE).so
 NAMELN = libft_malloc.so
 HEADER = -c
 FLAGS = -g -Wall -Wextra -Werror
-# CONFIG = gcc $(SRC) $(FLAGS) -shared -o $(NAME) $(LIBFT) -fPIC
-CONFIG = gcc $(FLAGS) malloc.c init.c block.c print_mem.c \
-	libft/libft.a -shared -o $(NAME) -fPIC
+CONFIG = gcc $(FLAGS) $(HEADER) $(SRC)
+CONFIG2 = gcc -fPIC -shared -o $(NAME) $(OBJ) $(LIBFT)
 LIBFT = libft/libft.a
 SRC = malloc.c init.c block.c print_mem.c
 OBJ = $(patsubst %.c, %.o, $(SRC))
@@ -32,7 +31,7 @@ $(LIBFT):
 
 $(NAME): $(OBJ) $(LIBFT)
 	$(CONFIG)
-	# $(CONFIG1)
+	$(CONFIG2)
 	ln -s $(NAME) $(NAMELN)
 
 test:

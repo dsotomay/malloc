@@ -6,11 +6,12 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:56:29 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/24 21:12:30 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/26 01:19:19 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
+#include <stdio.h>
 
 void	g_bin_init()
 {
@@ -18,6 +19,7 @@ void	g_bin_init()
 	int i;
 	
 	g_bin.pgsize = getpagesize();
+	getrlimit(RLIMIT_DATA, &g_bin.rlp);
 	g_bin.large_lst = NULL;
 	g_bin.small_lst = zone_init(g_bin.pgsize * 60);
 	g_bin.tiny_lst = zone_init(g_bin.pgsize * 25);
@@ -34,7 +36,7 @@ void	g_bin_init()
 			blk_push(g_bin.tiny_lst, TINY);
 		i++;
 	}
-	ft_printf("start = %p\n", g_bin.tiny_lst->root);
+	ft_printf("start = %p\n", g_bin.tiny_lst);
 	g_bin.total = g_bin.small_lst->size + g_bin.tiny_lst->size;
 	g_bin.used = g_bin.small_lst->used + g_bin.tiny_lst->used;
 }

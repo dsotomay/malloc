@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/11 19:41:45 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/23 17:54:07 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/26 01:46:08 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,10 @@ t_block	*split_blk(t_block *blk, size_t size)
 	if (blk->next->blk_size - BLK_SIZE < 8 && blk->next->next
 	&& blk->next->next->is_free == 1)
 		blk_join(blk->next, blk->next->next);
+	// if (blk->next->blk_size - BLK_SIZE > size - BLK_SIZE && size - BLK_SIZE <= TINY)
+	// 	split_blk(blk->next, TINY / 2);
+	// else if (blk->next->blk_size > size && size - BLK_SIZE <= SMALL)
+	// 	split_blk(blk->next, SMALL / 2);
+	// blk->blk_size = size;
 	return (blk);
 }
