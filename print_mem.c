@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/20 19:28:17 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/26 01:40:46 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/27 22:27:32 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	print_tiny(t_zone *z)
 		blk = zone->root;
 		while (blk && blk->next)
 		{
-			if (blk->is_free)
+			if (!blk->is_free)
 			{
 				if (blk->next)
 					i++;

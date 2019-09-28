@@ -6,13 +6,12 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:46:12 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/25 22:39:48 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/27 19:26:12 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_MALLOC_H
 # define FT_MALLOC_H
-# define BLK_SIZE (sizeof(t_block))
 # ifndef MIN_ALLOC
 #  define MIN_ALLOC 100
 # endif
@@ -31,10 +30,11 @@
 
 typedef struct	s_block
 {
-	size_t			blk_size;
 	struct s_block	*next;
+	size_t			blk_size;
 	int				is_free;
 }				t_block;
+# define BLK_SIZE (sizeof(t_block))
 
 typedef struct	s_zone
 {

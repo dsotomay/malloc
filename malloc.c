@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:37:46 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/26 01:26:17 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/27 22:26:48 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,11 +134,14 @@ static t_block *find_free(t_zone *z, size_t size)
 	while (zone)
 	{
 		blk = zone->root;
-		while (blk)
+		while ((int)blk != -1 && blk)
 		{
-			if (blk->is_free == 1 && blk->blk_size >= size
-										&& (zone->used += blk->blk_size))
-				return (split_blk(blk, size + BLK_SIZE));
+			if (blk->is_free == 1 && blk->blk_size >= size)
+			{
+				zone->used += blk->blk_size;
+				return (blk);
+				// return (split_blk(blk, size + BLK_SIZE));
+			}
 			blk = blk->next;
 		}
 		if (!blk && zone->size - zone->used >= size + BLK_SIZE)
