@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:37:46 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/27 22:26:48 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/29 00:19:00 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,13 +138,15 @@ static t_block *find_free(t_zone *z, size_t size)
 		{
 			if (blk->is_free == 1 && blk->blk_size >= size)
 			{
-				zone->used += blk->blk_size;
-				return (blk);
-				// return (split_blk(blk, size + BLK_SIZE));
+				zone->used += blk->blk_size + BLK_SIZE;
+				// return (blk);
+				return (split_blk(blk, size + BLK_SIZE));
 			}
 			blk = blk->next;
-		}
-		if (!blk && zone->size - zone->used >= size + BLK_SIZE)
+		} // if above fails then i should push a new block until i can't at
+		// which point i should check if there is a new zone. if there is no new zone
+		// then i must create one else move on to the next zone and repeat the cycle:
+		if (!blk && ((size_t)blk - (size_t)zone < zone->size - size + BLK_SIZE || zone->used == sizeof(t_zone)))
 		{
 			blk_push(zone, size);
 			zone->used += zone->end->blk_size;

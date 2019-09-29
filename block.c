@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/11 19:41:45 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/27 22:01:55 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/28 22:09:56 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,23 @@ void	blk_join(t_block *blk1, t_block *blk2)
 t_block	*split_blk(t_block *blk, size_t size)
 {
 	char *blk1;
-	char tmp[BLK_SIZE];
+	// char tmp[BLK_SIZE];
+	t_block *tmp;
 	t_block *new;
 	int bsize;
 	// int asize;
 	
-	ft_memcpy(tmp, blk->next, BLK_SIZE);
+	
+	// ft_memcpy(tmp, blk->next, BLK_SIZE);
+	tmp = blk->next;
 	bsize = (blk->blk_size - (blk->blk_size - size));
 	blk1 = (char*)blk + (blk->blk_size - (blk->blk_size - size));
 	if ((blk->blk_size - size) > 0)
 	{
 		new = blk_init(blk1, blk->blk_size - size);
-		ft_bzero(new, blk->blk_size - size);
-		new->next = (t_block*)tmp;
+		// ft_bzero(new, blk->blk_size - size);
+		new->next = tmp;
+		// ft_memcpy(new->next, tmp, BLK_SIZE);
 		blk->next = new;
 		if (blk->next->blk_size - BLK_SIZE < 8 && blk->next->next
 		&& blk->next->next->is_free == 1)

@@ -6,12 +6,43 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:56:29 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/26 01:19:19 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/28 18:14:34 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
 #include <stdio.h>
+
+// void	g_bin_init()
+// {
+	
+// 	int i;
+// 	t_bin	s_bin[1];
+	
+	
+// 	s_bin[0].pgsize = getpagesize();
+// 	getrlimit(RLIMIT_DATA, &s_bin[0].rlp);
+// 	s_bin[0].large_lst = NULL;
+// 	s_bin[0].small_lst = zone_init(s_bin[0].pgsize * 60);
+// 	s_bin[0].tiny_lst = zone_init(s_bin[0].pgsize * 25);
+// 	i = 0;
+// 	while (i < MIN_ALLOC * 2)
+// 	{
+// 		if (i < MIN_ALLOC / 2)
+// 			blk_push(s_bin[0].small_lst, TINY + 1);
+// 		else if (i < MIN_ALLOC)
+// 			blk_push(s_bin[0].small_lst, SMALL / 2);
+// 		else if (i < (MIN_ALLOC * 2) - (MIN_ALLOC / 2))
+// 			blk_push(s_bin[0].tiny_lst, TINY / 2);
+// 		else if (i < MIN_ALLOC * 2)
+// 			blk_push(s_bin[0].tiny_lst, TINY);
+// 		i++;
+// 	}
+// 	s_bin[0].total = s_bin[0].small_lst->size + s_bin[0].tiny_lst->size;
+// 	s_bin[0].used = s_bin[0].small_lst->used + s_bin[0].tiny_lst->used;
+// 	g_bin[0] = s_bin[0];
+// 	ft_printf("start = %p\n", s_bin[0].tiny_lst);
+// }
 
 void	g_bin_init()
 {

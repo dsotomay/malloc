@@ -6,7 +6,7 @@
 #    By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/19 23:40:03 by dysotoma          #+#    #+#              #
-#    Updated: 2019/09/27 19:32:44 by dysotoma         ###   ########.fr        #
+#    Updated: 2019/09/28 17:03:18 by dysotoma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,6 +74,8 @@ CFLAGS = -g -Wall -Wextra -Werror
 LIBFT = libft/libft.a
 SRC = block.c init.c malloc.c print_mem.c
 OBJ	= $(SRC:%.c=%.o)
+
+all: $(NAME) $(LIBFT)
 
 $(NAME): $(OBJ) $(LIBFT)
 	gcc -g -fPIC -shared -o $(NAME) $(OBJ) $(LIBFT)
