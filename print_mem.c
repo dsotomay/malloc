@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/20 19:28:17 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/28 23:40:30 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/30 02:38:39 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ static void	print_tiny(t_zone *z)
 				blk->blk_size - BLK_SIZE);
 				ft_printf("%i\n",i);
 			}
+				ft_printf("%i\n",i);
 			blk = blk->next;
 		}
+				ft_printf("%i\n",i);
 		zone = zone->next;
-	ft_printf("%i\n",i);
+	// ft_printf("%i\n",i);
 	}
 }
 

@@ -6,7 +6,7 @@
 #    By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/09/19 23:40:03 by dysotoma          #+#    #+#              #
-#    Updated: 2019/09/28 17:03:18 by dysotoma         ###   ########.fr        #
+#    Updated: 2019/09/29 21:45:06 by dysotoma         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,7 +72,7 @@ NAME = libft_malloc_$(HOSTTYPE).so
 NAMELN = libft_malloc.so
 CFLAGS = -g -Wall -Wextra -Werror
 LIBFT = libft/libft.a
-SRC = block.c init.c malloc.c print_mem.c
+SRC = block.c init.c malloc.c print_mem.c find_free.c
 OBJ	= $(SRC:%.c=%.o)
 
 all: $(NAME) $(LIBFT)

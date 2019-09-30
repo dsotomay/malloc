@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:46:12 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/28 18:14:40 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/29 21:46:27 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,11 @@ void			blk_join(t_block *blk1, t_block *blk2);
 */
 
 void 			show_alloc_mem();
+
+/*
+** FIND_FREE
+*/
+
+t_block			*find_free(t_zone *zone, size_t size);
 
 #endif

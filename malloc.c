@@ -6,7 +6,7 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/12 21:37:46 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/29 00:19:00 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/09/30 01:18:09 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,46 +124,6 @@
 ** }
 */
 
-static t_block *find_free(t_zone *z, size_t size)
-{
-	t_zone	*zone;
-	t_block	*blk;
-
-	zone = z;
-			// ft_printf("zone->rootp = %p\n", *zone);
-	while (zone)
-	{
-		blk = zone->root;
-		while ((int)blk != -1 && blk)
-		{
-			if (blk->is_free == 1 && blk->blk_size >= size)
-			{
-				zone->used += blk->blk_size + BLK_SIZE;
-				// return (blk);
-				return (split_blk(blk, size + BLK_SIZE));
-			}
-			blk = blk->next;
-		} // if above fails then i should push a new block until i can't at
-		// which point i should check if there is a new zone. if there is no new zone
-		// then i must create one else move on to the next zone and repeat the cycle:
-		if (!blk && ((size_t)blk - (size_t)zone < zone->size - size + BLK_SIZE || zone->used == sizeof(t_zone)))
-		{
-			blk_push(zone, size);
-			zone->used += zone->end->blk_size;
-			return (zone->end);
-		}
-		if (!zone->next)
-		{
-			if (size > SMALL)
-				zone->next = zone_init(size + sizeof(t_zone) + BLK_SIZE);
-			else			
-				zone->next = zone_init(g_bin.pgsize * 25);
-		}
-		zone = (int)zone->next != -1 ? zone->next : NULL;
-	}
-	return (NULL);
-}
-
 void			*malloc(size_t size)
 {
 	// static int	is_init = 0;
@@ -172,7 +132,7 @@ void			*malloc(size_t size)
 	// if (!is_init && (is_init = 1))
 	// 	g_bin_init();
 	// ft_printf("here\n");
-	write(1, "here\n", 5);
+	// write(1, "here\n", 5);
 	blk = NULL;
 	if (size <= 0 || size == ~(0ULL) || size >= g_bin.rlp.rlim_cur)
 		return (NULL);
