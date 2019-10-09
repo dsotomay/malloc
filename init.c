@@ -6,70 +6,34 @@
 /*   By: dysotoma <dysotoma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/10 21:56:29 by dysotoma          #+#    #+#             */
-/*   Updated: 2019/09/28 18:14:34 by dysotoma         ###   ########.fr       */
+/*   Updated: 2019/10/07 01:27:40 by dysotoma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
 #include <stdio.h>
 
-// void	g_bin_init()
-// {
-	
-// 	int i;
-// 	t_bin	s_bin[1];
-	
-	
-// 	s_bin[0].pgsize = getpagesize();
-// 	getrlimit(RLIMIT_DATA, &s_bin[0].rlp);
-// 	s_bin[0].large_lst = NULL;
-// 	s_bin[0].small_lst = zone_init(s_bin[0].pgsize * 60);
-// 	s_bin[0].tiny_lst = zone_init(s_bin[0].pgsize * 25);
-// 	i = 0;
-// 	while (i < MIN_ALLOC * 2)
-// 	{
-// 		if (i < MIN_ALLOC / 2)
-// 			blk_push(s_bin[0].small_lst, TINY + 1);
-// 		else if (i < MIN_ALLOC)
-// 			blk_push(s_bin[0].small_lst, SMALL / 2);
-// 		else if (i < (MIN_ALLOC * 2) - (MIN_ALLOC / 2))
-// 			blk_push(s_bin[0].tiny_lst, TINY / 2);
-// 		else if (i < MIN_ALLOC * 2)
-// 			blk_push(s_bin[0].tiny_lst, TINY);
-// 		i++;
-// 	}
-// 	s_bin[0].total = s_bin[0].small_lst->size + s_bin[0].tiny_lst->size;
-// 	s_bin[0].used = s_bin[0].small_lst->used + s_bin[0].tiny_lst->used;
-// 	g_bin[0] = s_bin[0];
-// 	ft_printf("start = %p\n", s_bin[0].tiny_lst);
-// }
-
-void	g_bin_init()
+void	g_bin_init(t_bin *g)
 {
-	
 	int i;
-	
-	g_bin.pgsize = getpagesize();
-	getrlimit(RLIMIT_DATA, &g_bin.rlp);
-	g_bin.large_lst = NULL;
-	g_bin.small_lst = zone_init(g_bin.pgsize * 60);
-	g_bin.tiny_lst = zone_init(g_bin.pgsize * 25);
+
+	g->pgsize = getpagesize();
+	getrlimit(RLIMIT_DATA, &g->rlp);
+	g->large_lst = NULL;
+	g->small_lst = zone_init((SMALL * MIN_ALLOC / g->pgsize + 2) * g->pgsize);
+	g->tiny_lst = zone_init((TINY * MIN_ALLOC / g->pgsize + 2) * g->pgsize);
 	i = 0;
 	while (i < MIN_ALLOC * 2)
 	{
-		if (i < MIN_ALLOC / 2)
-			blk_push(g_bin.small_lst, TINY + 1);
-		else if (i < MIN_ALLOC)
-			blk_push(g_bin.small_lst, SMALL / 2);
-		else if (i < (MIN_ALLOC * 2) - (MIN_ALLOC / 2))
-			blk_push(g_bin.tiny_lst, TINY / 2);
+		if (i < MIN_ALLOC)
+			blk_push(g->tiny_lst, TINY);
 		else if (i < MIN_ALLOC * 2)
-			blk_push(g_bin.tiny_lst, TINY);
+			blk_push(g->small_lst, SMALL / 2);
 		i++;
 	}
-	ft_printf("start = %p\n", g_bin.tiny_lst);
-	g_bin.total = g_bin.small_lst->size + g_bin.tiny_lst->size;
-	g_bin.used = g_bin.small_lst->used + g_bin.tiny_lst->used;
+	g->total = g->small_lst->size + g->tiny_lst->size;
+	g->used = g->small_lst->used + g->tiny_lst->used;
+	g->do_init = 1;
 }
 
 t_zone	*zone_init(size_t size)
@@ -92,11 +56,11 @@ t_zone	*zone_init(size_t size)
 
 t_block	*blk_init(void *blk, size_t size)
 {
-	t_block *new;
+	char *new;
 
 	new = blk;
-	new->blk_size = size;
-	new->is_free = 1;
-	new->next = NULL;
-	return (new);
+	((t_block*)new)->blk_size = size;
+	((t_block*)new)->is_free = 1;
+	((t_block*)new)->next = NULL;
+	return ((t_block*)new);
 }
